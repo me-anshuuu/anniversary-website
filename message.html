@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leave a Message</title>
+  <style>
+    /* Basic reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Georgia', serif;
+    }
+
+    /* Background styling */
+    body {
+      background-color: #fff3f5;
+      color: #333;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h3 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #ff69b4;
+    }
+
+    /* Message box styling */
+    #message-container {
+      max-width: 700px;
+      margin: 20px auto;
+      padding: 20px;
+      border: 1px solid #ff69b4;
+      border-radius: 8px;
+      background-color: #fce4ec;
+    }
+
+    #message-container input, #message-container select, #message-container textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 2px solid #ff69b4;
+      margin-bottom: 10px;
+      outline: none;
+    }
+
+    .submit-btn {
+      padding: 10px 25px;
+      font-size: 1rem;
+      background-color: #ff69b4;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .submit-btn:hover {
+      background-color: #ff1493;
+    }
+
+    .message-list {
+      margin-top: 30px;
+      max-width: 700px;
+      list-style: none;
+      padding: 0;
+      background-color: #fff3f5;
+      border-radius: 8px;
+      border: 1px solid #ff69b4;
+      padding: 15px;
+    }
+
+    .message-list li {
+      margin-bottom: 15px;
+      padding: 15px;
+      background-color: #fff;
+      border-left: 4px solid #ff69b4;
+      border-radius: 8px;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .message-name {
+      font-weight: bold;
+      color: #ff69b4;
+    }
+
+    .message-date {
+      font-size: 0.8rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h3>Your Anniversary Wishes</h3>
+  <p>Leave a heartfelt message for your loved one:</p>
+  <div id="message-container">
+    <input type="text" id="name-input" placeholder="Your Name" />
+    <select id="greeting-input">
+      <option value="Happy Anniversary">Happy Anniversary</option>
+      <option value="With Love">With Love</option>
+      <option value="Forever Yours">Forever Yours</option>
+      <option value="Heartfelt Wishes">Heartfelt Wishes</option>
+    </select>
+    <textarea id="message-input" placeholder="Write your message here..."></textarea><br>
+    <button class="submit-btn" onclick="addMessage()">Submit</button>
+  </div>
+
+  <ul class="message-list" id="message-list">
+    <!-- Messages will be displayed here -->
+  </ul>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const messages = JSON.parse(localStorage.getItem("messages")) || [];
+      messages.forEach(message => displayMessage(message));
+    });
+
+    function addMessage() {
+      const nameInput = document.getElementById("name-input").value.trim();
+      const greetingInput = document.getElementById("greeting-input").value;
+      const messageInput = document.getElementById("message-input").value.trim();
+      const date = new Date().toLocaleDateString();
+
+      if (nameInput && messageInput) {
+        const message = { name: nameInput, greeting: greetingInput, text: messageInput, date };
+
+        const messages = JSON.parse(localStorage.getItem("messages")) || [];
+        messages.push(message);
+        localStorage.setItem("messages", JSON.stringify(messages));
+
+        displayMessage(message);
+
+        document.getElementById("name-input").value = "";
+        document.getElementById("message-input").value = "";
+      }
+    }
+
+    function displayMessage({ name, greeting, text, date }) {
+      const messageList = document.getElementById("message-list");
+      const messageItem = document.createElement("li");
+      messageItem.innerHTML = `
+        <span class="message-name">${greeting} from ${name}</span>
+        <span class="message-date"> - ${date}</span>
+        <p>${text}</p>
+      `;
+      messageList.appendChild(messageItem);
+    }
+  </script>
+</body>
+</html>
