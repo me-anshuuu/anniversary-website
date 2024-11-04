@@ -24,6 +24,8 @@
       color: #fff;
       text-align: center;
       padding: 20px;
+      position: relative;
+      overflow: hidden;
     }
 
     /* Overlay for better text readability */
@@ -35,6 +37,17 @@
       height: 100%;
       background: rgba(0, 0, 0, 0.4);
       z-index: 0;
+    }
+
+    /* Fade-in animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Apply animation to content and countdown */
+    .content, #countdown {
+      animation: fadeIn 1.5s ease-out;
     }
 
     .content {
@@ -61,11 +74,18 @@
       color: #ffdead;
     }
 
-    /* Countdown timer */
+    /* Countdown timer positioned in top-right */
     #countdown {
-      font-size: 1.5rem;
-      margin: 20px 0;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 1.2rem;
       color: #ffd700;
+      padding: 10px 15px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      z-index: 2;
     }
 
     /* Button */
@@ -86,40 +106,102 @@
     .button:hover {
       background-color: #ff1493;
     }
+
+    /* Heart Animation */
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: #ff69b4;
+      transform: rotate(45deg);
+      animation: fly 3s ease-in-out infinite;
+      opacity: 0.8;
+      z-index: 1;
+    }
+
+    .heart:before,
+    .heart:after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: inherit;
+      border-radius: 50%;
+    }
+
+    .heart:before {
+      top: -10px;
+      left: 0;
+    }
+
+    .heart:after {
+      left: 10px;
+      top: 0;
+    }
+
+    @keyframes fly {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-200px) scale(0.5);
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="overlay"></div>
+  <div id="countdown">Time until That Special Day : Loading...</div>
   <div class="content">
     <h1>Happy 6<sup>th</sup> Anniversary Meri Jaan..!</h1>
+    <br>
+    <h2>
+      Your Buggu Will Love Her Du-Du the same ...
+    </h2>
+    <br>
     <h2>Celebrating the beautiful journey we've shared together</h2>
-
-    <!-- Countdown timer display -->
-    <div id="countdown">Time until November 15, 2024: Loading...</div>
+    <br>
+    <h2>Special Upcoming Guests: Neyansh / Ahana</h2>
 
     <a href="message.html" class="button">Leave a Message</a>
   </div>
 
   <script>
-    // Set the target date and time
-    const targetDate = new Date("November 15, 2024 00:00:00").getTime();
+    // Generate floating hearts
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.animationDuration = 2 + Math.random() * 3 + "s"; // Random duration between 2s to 5s
 
-    // Update the countdown every second
+      // Add random pink or red color
+      heart.style.backgroundColor = Math.random() < 0.5 ? "#ff69b4" : "#ff1493";
+      document.body.appendChild(heart);
+
+      // Remove heart after animation
+      setTimeout(() => {
+        heart.remove();
+      }, 5000);
+    }
+
+    // Create hearts at intervals
+    setInterval(createHeart, 300);
+
+    // Countdown script
+    const targetDate = new Date("November 15, 2024 00:00:00").getTime();
     const countdownInterval = setInterval(() => {
       const now = new Date().getTime();
       const distance = targetDate - now;
-
-      // Calculate time left
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
       const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-      // Display the result in the countdown element
       document.getElementById("countdown").innerHTML = 
-        `Time until November 15, 2024: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+        `Time until That Special day of our life ..Anshu ♡ Neha..:    ${days}d ${hours}h ${minutes}m ${seconds}s`;
 
-      // If the countdown is finished, display a message
       if (distance < 0) {
         clearInterval(countdownInterval);
         document.getElementById("countdown").innerHTML = "The big day is here!";
